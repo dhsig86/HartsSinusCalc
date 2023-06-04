@@ -99,6 +99,80 @@ const EPOS = {
     generateSymptomsCheckboxes(AAO_HNSF);
   });
   
+  // ... (o código original permanece inalterado) ...
+
+var CLIENT_ID = '427755183487-v4j4bgiu31k0uo07lm6g8hvobg6n58r.apps.googleusercontent.com';
+var API_KEY = 'AIzaSyCN_bOjctYDsKuSoFRVf5hzR4Y5fDi2YMY';
+var DISCOVERY_DOCS = ["https://sheets.googleapis.com/$discovery/rest?version=v4"];
+var SCOPES = "https://www.googleapis.com/auth/spreadsheets";
+
+var SPREADSHEET_ID = '1douEgbZEmeAEktdWlXS30m8dnLR5USRGhgov8aty4qY';  // Atualize com o ID da sua planilha
+var RANGE = 'Sheet1!A2';  // Atualize com o intervalo que você deseja adicionar dados.
+
+function handleClientLoad() {
+  gapi.load('client:auth2', initClient);
+}
+
+function initClient() {
+  gapi.client.init({
+    apiKey: API_KEY,
+    clientId: CLIENT_ID,
+    discoveryDocs: DISCOVERY_DOCS,
+    scope: SCOPES
+  }).then(function () {
+    // Listen for sign-in state changes.
+    gapi.auth2.getAuthInstance().isSignedIn.listen(updateSigninStatus);
+
+    // Handle the initial sign-in state.
+    updateSigninStatus(gapi.auth2.getAuthInstance().isSignedIn.get());
+
+    // ... seu código aqui para manipular o status de login ou a lógica do aplicativo...
+  }, function(error) {
+    console.error(JSON.stringify(error, null, 2));
+  });
+}
+
+function updateGoogleSheet(symptomsChecked, guidelineUsed, result) {
+  var params = {
+    spreadsheetId: SPREADSHEET_ID,
+    range: RANGE,
+    valueInputOption: 'RAW',
+    insertDataOption: 'INSERT_ROWS',
+  };
+
+  var valueRangeBody = {
+    "majorDimension": "ROWS",
+    "values": [
+      [symptomsChecked.join(','), guidelineUsed.name, result],
+    ],
+  };
+
+  gapi.client.sheets.spreadsheets.values.append(params, valueRangeBody)
+      .then(function(response) {
+        console.log(response.result);
+      }, function(reason) {
+        console.error('error: ' + reason.result.error.message);
+      });
+}
+
+document.getElementById('calculate').addEventListener('click', () => {
+  let symptomsChecked = getCheckedSymptoms();
+  let result;
+  if (lastSelectedGuideline === EPOS) {
+      result = EPOS.calculateChance(symptomsChecked);
+  } else if (lastSelectedGuideline === AAO_HNSF) {
+      result = AAO_HNSF.calculateChance(symptomsChecked);
+  }
+
+  displayResult(result);
+  document.getElementById('alert').style.display = 'block';
+
+  updateGoogleSheet(symptomsChecked, lastSelectedGuideline, result);  // Atualize a planilha do Google Sheets
+});
+
+// ... (o restante do código original permanece inalterado) ...
+
+
   document.getElementById('calculate').addEventListener('click', () => {
     let symptomsChecked = getCheckedSymptoms();
     let result;
@@ -110,6 +184,9 @@ const EPOS = {
   
     displayResult(result);
     document.getElementById('alert').style.display = 'block';
+
+    // Chamada para updateGoogleSheet. Coloque isso depois de displayResult() e antes do final do event listener.
+    updateGoogleSheet(symptomsChecked, lastSelectedGuideline, result);  // Atualize a planilha do Google Sheets
 
   });
     
@@ -167,5 +244,10 @@ document.getElementById('resetButton').addEventListener('click', () => {
     resetCalculation();
     resetGuidelineSelection();
   });
+
+document.getElementById('sendToSheet').addEventListener('click', () => {
+    appendDataToSheet();
+  });
+   
   
 }); 
