@@ -1,0 +1,153 @@
+body {
+  font-family: Arial, sans-serif;
+  background-color: #f5f5f5;
+  color: #333;
+  margin: 0;
+  padding: 0;
+}
+
+.container {
+  max-width: 960px;
+  margin: 0 auto;
+  padding: 20px;
+  background-color: #fff;
+  border-radius: 5px;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+}
+
+.guideline-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 100px;
+  height: 120px;
+  margin: 10px;
+  padding: 10px;
+  border: none;
+  border-radius: 90px;
+  background-color: #005580;
+  color: #fff;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.guideline-button:hover {
+  background-color: #003d4d;
+}
+
+.guideline-button img {
+  width: 100px;
+  height: 100px;
+  border-radius: 50%;
+}
+
+.select-guideline {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.guideline-buttons {
+  display: flex;
+  justify-content: center;
+  padding: 20px;
+}
+
+
+/* CSS para a Calculadora de Sinusite */
+#calculate-container {
+  display: flex;
+  justify-content: center;
+  margin-top: 30px;
+  width: 100%;
+  font-size: 24px;
+  
+}
+
+.symptoms {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr); /* cria uma grade com duas colunas */
+  gap: 10px; /* adiciona um espaço de 10px entre os elementos da grade */
+  margin-top: 20px; /* adiciona uma margem superior de 20px para separar os sintomas do restante do conteúdo */
+}
+
+/* Estilo para os botões de sintomas (checkboxes) e suas labels */
+.symptoms label {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: #04496c;
+  color: #ffffff;
+  padding: 10px 20px;
+  border-radius: 5px;
+  transition-duration: 0.4s;
+  cursor: pointer;
+}
+
+.symptoms label:hover {
+  background-color: #4CAF50;
+}
+
+.symptoms input[type="checkbox"] {
+  display: none;
+}
+
+.symptoms span {
+  padding-left: 10px;
+}
+
+.symptoms input[type="checkbox"]:checked + span {
+  font-weight: bold;
+  color: #4CAF50;
+}
+
+#alert {
+  display: none;
+}
+
+
+
+#calculate {
+  display: block;
+  margin: 20px 0;
+  padding: 10px;
+  border: none;
+  border-radius: 5px;
+  background-color: #006400;
+  color: #fff;
+  cursor: pointer;
+  transition: background-color 0.3s;
+  font-size: 24px;
+}
+
+#calculate:hover {
+  background-color: #004c00;
+}
+
+.result {
+  margin-top: 20px;
+  padding: 20px;
+  border-radius: 5px;
+  background-color: #f9f9f9;
+  color: #333;
+}
+
+.footer {
+  text-align: center;
+  margin-top: 20px;
+}
+
+.footer button {
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  background-color: #006400;
+  color: #fff;
+  cursor: pointer;
+  transition: background-color 0.3s;
+  font-size: 18px;
+}
+
+.footer button:hover {
+  background-color: #004c00;
+}
