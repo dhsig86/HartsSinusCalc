@@ -1,3 +1,47 @@
+// Variáveis globais para armazenar o estado do atalho
+var isCtrlPressed = false;
+var isSPressed = false;
+var isWPressed = false;
+var lastSelectedGuideline = null;
+
+// Função para verificar se o atalho foi pressionado
+function checkShortcut(event) {
+  // Verificar se a tecla Ctrl foi pressionada
+  if (event.ctrlKey) {
+    isCtrlPressed = true;
+  }
+
+  // Verificar se a tecla S foi pressionada
+  if (event.key === 's') {
+    isSPressed = true;
+  }
+
+  // Verificar se a tecla W foi pressionada
+  if (event.key === 'w') {
+    isWPressed = true;
+  }
+
+  // Verificar se todas as teclas do atalho foram pressionadas
+  if (isCtrlPressed && isSPressed && isWPressed) {
+    // Exibir a tabela
+    createTable(getCheckedSymptoms(), lastSelectedGuideline, document.getElementById('result').textContent);
+  }
+}
+
+// Função para redefinir o estado do atalho
+function resetShortcutState() {
+  isCtrlPressed = false;
+  isSPressed = false;
+  isWPressed = false;
+}
+
+// Adicionar um ouvinte de evento para verificar o atalho quando qualquer tecla for pressionada
+document.addEventListener('keydown', checkShortcut);
+
+// Adicionar um ouvinte de evento para redefinir o estado do atalho quando qualquer tecla for liberada
+document.addEventListener('keyup', resetShortcutState);
+
+
 document.addEventListener('DOMContentLoaded', (event) => {
     // Coloque seu código JavaScript aqui...
     console.log('DOM fully loaded and parsed');
@@ -101,59 +145,7 @@ const EPOS = {
   
   // ... (o código original permanece inalterado) ...
 
-var CLIENT_ID = '427755183487-v4j4bgiu31k0uo07lm6g8hvobg6n58r.apps.googleusercontent.com';
-var API_KEY = 'AIzaSyCN_bOjctYDsKuSoFRVf5hzR4Y5fDi2YMY';
-var DISCOVERY_DOCS = ["https://sheets.googleapis.com/$discovery/rest?version=v4"];
-var SCOPES = "https://www.googleapis.com/auth/spreadsheets";
-
-var SPREADSHEET_ID = '1douEgbZEmeAEktdWlXS30m8dnLR5USRGhgov8aty4qY';  // Atualize com o ID da sua planilha
-var RANGE = 'Sheet1!A2';  // Atualize com o intervalo que você deseja adicionar dados.
-
-function handleClientLoad() {
-  gapi.load('client:auth2', initClient);
-}
-
-function initClient() {
-  gapi.client.init({
-    apiKey: API_KEY,
-    clientId: CLIENT_ID,
-    discoveryDocs: DISCOVERY_DOCS,
-    scope: SCOPES
-  }).then(function () {
-    // Listen for sign-in state changes.
-    gapi.auth2.getAuthInstance().isSignedIn.listen(updateSigninStatus);
-
-    // Handle the initial sign-in state.
-    updateSigninStatus(gapi.auth2.getAuthInstance().isSignedIn.get());
-
-    // ... seu código aqui para manipular o status de login ou a lógica do aplicativo...
-  }, function(error) {
-    console.error(JSON.stringify(error, null, 2));
-  });
-}
-
-function updateGoogleSheet(symptomsChecked, guidelineUsed, result) {
-  var params = {
-    spreadsheetId: SPREADSHEET_ID,
-    range: RANGE,
-    valueInputOption: 'RAW',
-    insertDataOption: 'INSERT_ROWS',
-  };
-
-  var valueRangeBody = {
-    "majorDimension": "ROWS",
-    "values": [
-      [symptomsChecked.join(','), guidelineUsed.name, result],
-    ],
-  };
-
-  gapi.client.sheets.spreadsheets.values.append(params, valueRangeBody)
-      .then(function(response) {
-        console.log(response.result);
-      }, function(reason) {
-        console.error('error: ' + reason.result.error.message);
-      });
-}
+  
 
 document.getElementById('calculate').addEventListener('click', () => {
   let symptomsChecked = getCheckedSymptoms();
@@ -167,11 +159,151 @@ document.getElementById('calculate').addEventListener('click', () => {
   displayResult(result);
   document.getElementById('alert').style.display = 'block';
 
-  updateGoogleSheet(symptomsChecked, lastSelectedGuideline, result);  // Atualize a planilha do Google Sheets
+    
 });
 
 // ... (o restante do código original permanece inalterado) ...
+function createTable(symptomsChecked, guidelineUsed, result) {
+    // Obtenha a referência do elemento onde você deseja exibir a tabela
+    var tableContainer = document.getElementById('tableContainer');
+  
+    // Verifique se a tabela já existe no contêiner
+    var table = tableContainer.querySelector('table');
+    if (!table) {
+      // Se a tabela ainda não existir, crie uma nova tabela
+      table = document.createElement('table');
+      table.classList.add('data-table');
+      tableContainer.appendChild(table);
+  
+      // Crie a linha de cabeçalho da tabela
+      var headerRow = document.createElement('tr');
+      var header1 = document.createElement('th');
+      header1.textContent = 'Sintoma';
+      headerRow.appendChild(header1);
+  
+      // Adicione as opções de sintoma como colunas na tabela
+      for (var i = 0; i < symptomsChecked.length; i++) {
+        var symptomHeader = document.createElement('th');
+        symptomHeader.textContent = symptomsChecked[i];
+        headerRow.appendChild(symptomHeader);
+      }
+  
+      // Adicione a coluna de resultado
+      var resultHeader = document.createElement('th');
+      resultHeader.textContent = 'Resultado';
+      headerRow.appendChild(resultHeader);
+  
+      // Adicione a linha de cabeçalho à tabela
+      table.appendChild(headerRow);
+    }
+  
+    // Crie uma linha de dados com a diretriz e o resultado
+    var dataRow = document.createElement('tr');
+  
+    // Crie a célula para a diretriz
+    var guidelineCell = document.createElement('td');
+    guidelineCell.textContent = guidelineUsed.name;
+    dataRow.appendChild(guidelineCell);
+  
+    // Preencha as células de sintoma com marcadores de verificação
+    for (var i = 0; i < symptomsChecked.length; i++) {
+      var symptomCell = document.createElement('td');
+      symptomCell.textContent = '✔';
+      dataRow.appendChild(symptomCell);
+    }
+  
+    // Adicione a célula de resultado
+    var resultCell = document.createElement('td');
+    resultCell.textContent = result;
+    dataRow.appendChild(resultCell);
+  
+    // Adicione a linha de dados à tabela
+    table.appendChild(dataRow);
+  }  
 
+  // Função para armazenar os dados da tabela no armazenamento local
+  function saveTableData(tableData) {
+    localStorage.setItem('tableData', JSON.stringify(tableData));
+  }
+  
+  // Função para recuperar os dados da tabela do armazenamento local
+  function getTableData() {
+    var tableData = localStorage.getItem('tableData');
+    return JSON.parse(tableData) || [];
+  }
+  // Função para adicionar novos dados à tabela
+  function addTableData(symptomsChecked, guidelineUsed, result) {
+    var tableData = getTableData();
+  
+    // Adicione os novos dados à tabela
+    var newRow = [guidelineUsed.name].concat(symptomsChecked).concat(result);
+    tableData.push(newRow);
+  
+    // Salve a tabela atualizada no armazenamento local
+    saveTableData(tableData);
+  }
+  
+  // Função para exibir os dados da tabela
+  function displayTableData() {
+    var tableData = getTableData();
+  
+    // Obtenha a referência do elemento onde você deseja exibir a tabela
+    var tableContainer = document.getElementById('tableContainer');
+  
+    // Crie uma tabela HTML
+    var table = document.createElement('table');
+    table.classList.add('data-table'); // Adicione uma classe CSS para estilização opcional
+
+    // Percorra os dados da tabela e crie as linhas e células correspondentes
+    for (var i = 0; i < tableData.length; i++) {
+        var rowData = tableData[i];
+    
+        var dataRow = document.createElement('tr');
+    
+    // Crie as células da linha
+    for (var j = 0; j < rowData.length; j++) {
+        var cellData = rowData[j];
+  
+        var cell = document.createElement('td');
+        cell.textContent = cellData;
+        dataRow.appendChild(cell);
+      }
+  
+      // Adicione a linha à tabela
+      table.appendChild(dataRow);
+    }
+  
+    // Limpe o conteúdo atual do contêiner da tabela
+    tableContainer.innerHTML = '';
+  
+    // Adicione a tabela ao contêiner
+    tableContainer.appendChild(table);
+  }
+
+  document.getElementById('tableInsert').addEventListener('click', () => {
+    var symptomsChecked = getCheckedSymptoms();
+    var guidelineUsed = lastSelectedGuideline;
+    var result = document.getElementById('result').textContent;
+
+    // Adicione os novos dados à tabela
+    addTableData(symptomsChecked, guidelineUsed, result);
+    // Atualize a exibição da tabela
+    displayTableData();
+  });
+
+  // Função para obter os sintomas marcados
+  function getCheckedSymptoms() {
+    var checkboxes = document.querySelectorAll('#symptoms input[type="checkbox"]');
+    var checkedSymptoms = [];
+    checkboxes.forEach(function (checkbox) {
+      if (checkbox.checked) {
+        var symptomText = checkbox.nextElementSibling.textContent.trim();
+        checkedSymptoms.push(symptomText);
+      }
+    });
+    return checkedSymptoms;
+  }
+  
 
   document.getElementById('calculate').addEventListener('click', () => {
     let symptomsChecked = getCheckedSymptoms();
@@ -185,28 +317,31 @@ document.getElementById('calculate').addEventListener('click', () => {
     displayResult(result);
     document.getElementById('alert').style.display = 'block';
 
-    // Chamada para updateGoogleSheet. Coloque isso depois de displayResult() e antes do final do event listener.
-    updateGoogleSheet(symptomsChecked, lastSelectedGuideline, result);  // Atualize a planilha do Google Sheets
-
+    createTable(symptomsChecked, lastSelectedGuideline, result);
+    
+    
   });
     
   function displayResult(probability) {
     const resultElement = document.getElementById('result');
     let comment = '';
-  
-    if (probability < 33) {
-      resultElement.style.color = 'green';
-      comment = 'Baixa probabilidade de sinusite bacteriana';
-    } else if (probability < 66) {
-      resultElement.style.color = 'orange';
-      comment = 'Média probabilidade de sinusite bacteriana';
-    } else {
-      resultElement.style.color = 'red';
-      comment = 'Alta probabilidade de sinusite bacteriana';
+    
+    if (typeof probability !== 'undefined') {
+      if (probability < 33) {
+        resultElement.style.color = 'green';
+        comment = 'Baixa probabilidade de sinusite bacteriana';
+      } else if (probability < 66) {
+        resultElement.style.color = 'orange';
+        comment = 'Média probabilidade de sinusite bacteriana';
+      } else {
+        resultElement.style.color = 'red';
+        comment = 'Alta probabilidade de sinusite bacteriana';
+      }
+    
+      resultElement.textContent = `${comment}: ${probability.toFixed(2)}%`;
     }
-  
-    resultElement.textContent = `${comment}: ${probability.toFixed(2)}%`;
   }
+  
   
   function getCheckedSymptoms() {
     let checkboxes = document.querySelectorAll('#symptoms input[type="checkbox"]');
@@ -236,6 +371,7 @@ document.getElementById('calculate').addEventListener('click', () => {
     document.getElementById('symptoms').innerHTML = '';
     
     lastSelectedGuideline = null;
+    console.log('resetGuidelineSelection', lastSelectedGuideline);
 }
 
   
@@ -245,9 +381,11 @@ document.getElementById('resetButton').addEventListener('click', () => {
     resetGuidelineSelection();
   });
 
-document.getElementById('sendToSheet').addEventListener('click', () => {
-    appendDataToSheet();
+// Função para carregar os dados da tabela ao carregar a página
+window.addEventListener('DOMContentLoaded', function () {
+    displayTableData();
   });
-   
+  
+  
   
 }); 
