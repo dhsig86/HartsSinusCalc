@@ -385,6 +385,16 @@ document.getElementById('resetButton').addEventListener('click', () => {
 window.addEventListener('DOMContentLoaded', function () {
     displayTableData();
   });
+
+function clearTable() {
+    // Obtenha a referência para o contêiner da tabela
+    var tableContainer = document.getElementById('tableContainer');
+
+    // Limpe o conteúdo do contêiner
+    tableContainer.innerHTML = '';
+
+    localStorage.removeItem('tableData');
+} 
   
 window.addEventListener('keydown', function(event) {
     // Se a combinação de teclas 'Ctrl' + 'Alt' + 't' for pressionada, exiba a tabela
