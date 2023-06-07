@@ -386,6 +386,14 @@ window.addEventListener('DOMContentLoaded', function () {
     displayTableData();
   });
   
+window.addEventListener('keydown', function(event) {
+    // Se a combinação de teclas 'Ctrl' + 'Alt' + 't' for pressionada, exiba a tabela
+    if (event.ctrlKey && event.altKey && event.key.toLowerCase() === 't') {
+        var tableContainer = document.getElementById('tableContainer');
+        tableContainer.style.display = '';
+    }
+});
+  
   
   
 }); 
