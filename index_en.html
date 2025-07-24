@@ -1,18 +1,18 @@
 <!DOCTYPE html>
-<html lang="pt-br">
+<html lang="en">
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Calculadora de Chance de Sinusite</title>
+    <title>Sinusitis Probability Calculator</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
     <div class="container">
-        <div class="language-switcher"><a href="index_en.html">English</a></div>
-        <h1>Calculadora de Sinusite Bacteriana Aguda</h1>
+        <div class="language-switcher"><a href="index.html">Português</a></div>
+        <h1>Acute Bacterial Sinusitis Calculator</h1>
         <div class="select-guideline" >
-            <h2>Escolha a diretriz: </h2>
+            <h2>Select guideline: </h2>
             <div class="guideline-buttons">
                 <button id="EPOS" class="guideline-button">
                     <img src="images\EPOS.png" alt="EPOS 2012">
@@ -22,24 +22,24 @@
                 </button>
                  
             </div>
-            <p>Após a escolha da diretriz, clique nos sintomas e aperte calcular</p>
+            <p>After choosing the guideline, click the symptoms and press calculate</p>
             <div id="guideline-info"></div>
         </div>
 
         <div class="symptoms" id="symptoms">
-            <!-- Os sintomas serão gerados dinamicamente com base na diretriz escolhida -->
+            <!-- Symptoms will be generated dynamically based on the chosen guideline -->
         </div>
 
         <div id="calculate-container">
-            <button id="calculate">Calcular</button>
+            <button id="calculate">Calculate</button>
           </div>
 
         <div id="result" class="result">
-            <!-- O resultado será exibido aqui -->
+            <!-- Result will appear here -->
         </div>
 
         <div id="alert">
-            <p>Por favor, consulte um médico otorrinolaringologista para um diagnóstico e tratamento adequado. Você pode marcar uma consulta <a href="https://www.doctoralia.com.br/dario-hart-signorini/otorrino/rio-de-janeiro">aqui</a>.</p>
+            <p>Please consult an otolaryngologist for appropriate diagnosis and treatment. You can schedule an appointment <a href="https://www.doctoralia.com.br/dario-hart-signorini/otorrino/rio-de-janeiro">here</a>.</p>
           </div>
 
 
@@ -48,8 +48,8 @@
           
   
     </div>
-    <!-- Módulo principal da aplicação -->
-    <script type="module" src="ui.js"></script>
+    <!-- Main application module -->
+    <script type="module" src="ui_en.js"></script>
     
 
 
@@ -57,10 +57,10 @@
 
     
     <footer class="footer">
-        <button id="resetButton">Resetar</button>
-        <button id="tableInsert">Enviar para Planilha</button>
+        <button id="resetButton">Reset</button>
+        <button id="tableInsert">Send to Table</button>
 
-        <p>© 2023 - Calculadora de Chance de Sinusite</p>
+        <p>© 2023 - Sinusitis Probability Calculator</p>
       </footer>
     
         
