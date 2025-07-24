@@ -2,6 +2,8 @@
 
 HartsSinusCalc é uma calculadora web que estima a probabilidade de sinusite bacteriana aguda. O cálculo segue os critérios das diretrizes **EPOS 2012** (European Position Paper on Rhinosinusitis and Nasal Polyps) e **AAO‑HNSF** (American Academy of Otolaryngology – Head and Neck Surgery Foundation).
 
+Documentação disponível em [inglês](README_en.md).
+
 ## Como usar
 1. Abra `index.html` servindo-o em um servidor local (ex.: `npx serve` ou `python3 -m http.server`).
 2. Selecione a diretriz desejada clicando em "EPOS" ou "AAO-HNSF".
@@ -17,6 +19,9 @@ Esta calculadora não substitui a avaliação médica profissional. Utilize-a ap
 
 ## Licença
 Distribuído sob a [GPLv3](LICENSE).
+
+## Idiomas Disponíveis
+Este projeto está disponível em Português e Inglês. Utilize os links no topo das páginas para alternar entre os idiomas.
 
 ## Contribuições e Planos Futuros
 Sugestões e *pull requests* são bem-vindos. Pretendemos traduzir a interface para outros idiomas e incorporar novas diretrizes futuramente.
